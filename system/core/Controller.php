@@ -67,6 +67,15 @@ class CI_Controller {
 	public $load;
 
 	/**
+	 * 
+	 * twig template
+	 * 
+	 */
+
+	 public $loader;
+	 public $twig;
+
+	/**
 	 * Class constructor
 	 *
 	 * @return	void
@@ -74,6 +83,11 @@ class CI_Controller {
 	public function __construct()
 	{
 		self::$instance =& $this;
+
+		//twig 模板引擎宣告 START
+			$this->loader = new \Twig\Loader\FilesystemLoader(VIEWPATH);
+			$this->twig = new \Twig\Environment($this->loader);
+		//twig 模板引擎宣告 END
 
 		// Assign all the class objects that were instantiated by the
 		// bootstrap file (CodeIgniter.php) to local class variables
