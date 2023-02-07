@@ -49,13 +49,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class CI_Model {
 
+	protected $table;
+
+	protected $primaryKey = 'id';
+
 	/**
 	 * Class constructor
 	 *
 	 * @link	https://github.com/bcit-ci/CodeIgniter/issues/5332
 	 * @return	void
 	 */
-	public function __construct() {}
+	public function __construct() {
+
+		$this->load->database();
+
+	}
 
 	/**
 	 * __get magic
@@ -72,6 +80,41 @@ class CI_Model {
 		//	saying 'Undefined Property: system/core/Model.php', it's
 		//	most likely a typo in your model code.
 		return get_instance()->$key;
+	}
+
+	public function getData($id = NULL)
+	{
+		if ($id === NULL) {
+
+            $query = $this->db->get($this->table);
+            return $query->result_array();
+
+        }
+
+        $query = $this->db->get_where($this->table, array($this->primaryKey => $id));
+
+		if(empty($query->row_array())){
+			
+			return FALSE;
+		}
+
+        return $query->row_array();
+	}
+
+	public function saveData($datas = [], $id = NULL)
+	{
+		
+		if ($id === NULL) {
+
+			return $this->db->insert($this->table, $datas);
+
+		} else {
+
+			$this->db->where($this->primaryKey, $id);
+			return $this->db->update($this->table, $datas);
+
+		}
+
 	}
 
 }

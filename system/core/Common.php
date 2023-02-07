@@ -847,3 +847,28 @@ if ( ! function_exists('function_usable'))
 		return FALSE;
 	}
 }
+
+if( ! function_exists('print_a'))
+{
+
+	function print_a($value)
+	{
+
+		echo "<pre>";
+		print_r($value);
+		echo "</pre>";
+	}
+
+}
+
+if( ! function_exists('dd'))
+{
+
+	function dd($value)
+	{
+
+		print_a($value);
+		die();
+	}
+
+}
