@@ -8,7 +8,31 @@
         public function index()
         {
             
-            echo $this->twig->render('index.twig');
+            $this->load->library('session');
+
+            $userId = $this->session->userdata('userID');
+            
+            if (!empty($userId)) { //已登入
+
+                $data = [
+                    'userRealName' => $this->session->userData('userRealName'),
+                    'action' => 'logout',
+                    'actionName' => 'Logout', 
+                ];
+
+            } else { //未登入
+                
+                $data = [
+                    'userRealName' => '',
+                    'action' => 'login',
+                    'actionName' => 'Login', 
+                ];
+
+            }
+
+            
+
+            echo $this->twig->render('index.twig',$data);
 
         }
 

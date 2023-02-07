@@ -105,7 +105,7 @@ class CI_Model {
 	{
 		
 		if ($id === NULL) {
-
+			
 			return $this->db->insert($this->table, $datas);
 
 		} else {
