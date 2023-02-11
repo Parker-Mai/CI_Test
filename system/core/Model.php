@@ -57,6 +57,8 @@ class CI_Model {
 
 	protected $softDeletes = FALSE; //是否假刪
 
+	protected $loginField = ''; //宣告如果登入驗證的帳號欄位名稱
+
 	protected $passWordHash = ''; //宣告哪一欄位要編碼
 
 	protected $dateFormat = 'Y/m/d H:i:s'; //時間格式

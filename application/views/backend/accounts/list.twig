@@ -17,12 +17,11 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-
                             <th> 帳號 </th>
                             <th> 姓名 </th>
                             <th> 手機 </th>
                             <th> 信箱 </th>
-                            <th> 最後登入時間 </th>
+                            <th width="10%"> 最後登入時間 </th>
                             <th width="5%"> 狀態 </th>
                             <th width="10%"></th>
                         </tr>
@@ -34,7 +33,7 @@
                             <td> {{ item.account_realname }} </td>
                             <td> {{ item.account_phone }} </td>
                             <td> {{ item.account_email }} </td>
-                            <td> {{ item.account_last_login_at }} </td>
+                            <td> {{ item.last_login_at }} </td>
                             <td> {{ item.is_disabled }} </td>
                             <td>
                                 <a href="/admin/accounts/edit/{{ item.ID }}" class="btn btn-warning btn-icon-text">

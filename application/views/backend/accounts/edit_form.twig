@@ -13,7 +13,7 @@
                 <div class="form-group row">
                     <label for="account_name" class="col-sm-3 col-form-label">系統帳號</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="account_name" id="account_name" value="{{ account_name }}" {{ methodReadonly }} placeholder="系統帳號" required>
+                        <input type="text" class="form-control" name="account_name" id="account_name" value="{{ dbData.account_name }}" {{ methodReadonly }} placeholder="系統帳號" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -31,19 +31,19 @@
                 <div class="form-group row">
                     <label for="account_realname" class="col-sm-3 col-form-label">系統姓名</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="account_realname" id="account_realname" value="{{ account_realname }}" placeholder="系統姓名" required>
+                        <input type="text" class="form-control" name="account_realname" id="account_realname" value="{{ dbData.account_realname }}" placeholder="系統姓名" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="account_phone" class="col-sm-3 col-form-label">手機</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="account_phone" id="account_phone" value="{{ account_phone }}" placeholder="手機">
+                        <input type="text" class="form-control" name="account_phone" id="account_phone" value="{{ dbData.account_phone }}" placeholder="手機">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="account_email" class="col-sm-3 col-form-label">電子信箱</label>
                     <div class="col-sm-9">
-                        <input type="email" class="form-control" name="account_email" id="account_email" value="{{ account_email }}" placeholder="電子信箱">
+                        <input type="email" class="form-control" name="account_email" id="account_email" value="{{ dbData.account_email }}" placeholder="電子信箱">
                     </div>
                 </div>
 

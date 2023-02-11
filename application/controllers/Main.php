@@ -9,13 +9,12 @@
         {
             
             $this->load->library('session');
-
-            $userId = $this->session->userdata('userID');
+            $this->load->library('auth');
             
-            if (!empty($userId)) { //已登入
-
+            if ($this->auth->loginCheck('web')) { //已登入
+                
                 $data = [
-                    'userRealName' => $this->session->userData('userRealName'),
+                    'userRealName' => $this->auth->userData['frontendUser']['member_realname'],
                     'action' => 'logout',
                     'actionName' => 'Logout', 
                 ];
@@ -29,8 +28,6 @@
                 ];
 
             }
-
-            
 
             echo $this->twig->render('frontend/index.twig',$data);
 

@@ -1,15 +1,40 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Accounts extends CI_Controller
 {
+
+    protected $outData;
+
+    //重新宣告建構子 檢查是否登入
+    public function __construct()
+    {
+
+        parent::__construct();
+        
+        $this->load->library('auth');
+
+        if (!$this->auth->loginCheck('admin')) {
+            
+            //導向
+            die('<script>location.href="/admin";</script>');
+
+        } else {
+            
+            $this->outData = $this->auth->userData;
+
+        }
+
+    }
 
     public function index()
     {
         $this->load->model('accounts_model'); //宣告model
 
-        $data['dataList'] = $this->accounts_model->getData();
+        $this->outData['dataList'] = $this->accounts_model->getData();
 
-        echo $this->twig->render('backend/accounts/list.twig',$data);
+        echo $this->twig->render('backend/accounts/list.twig',$this->outData);
     }
 
     public function edit($id = NULL)
@@ -20,26 +45,26 @@ class Accounts extends CI_Controller
 
             if ($id !== NULL) { //資料更新時
 
-                $data = $this->accounts_model->getData($id);
+                $this->outData['dbData'] = $this->accounts_model->getData($id);
     
-                $data['pwdRequired'] = '';
-                $data['methodAction'] = '/admin/accounts/edit/'.$id;
-                $data['methodReadonly'] = 'disabled';
-                $data['methodTitle'] = '編輯';
+                $this->outData['pwdRequired'] = '';
+                $this->outData['methodAction'] = '/admin/accounts/edit/'.$id;
+                $this->outData['methodReadonly'] = 'disabled';
+                $this->outData['methodTitle'] = '編輯';
 
             } else {
                 
-                $data['pwdRequired'] = 'required';
-                $data['methodAction'] = '/admin/accounts/edit';
-                $data['methodReadonly'] = '';
-                $data['methodTitle'] = '新增';
+                $this->outData['pwdRequired'] = 'required';
+                $this->outData['methodAction'] = '/admin/accounts/edit';
+                $this->outData['methodReadonly'] = '';
+                $this->outData['methodTitle'] = '新增';
     
             }
 
-            $data['csrfName'] = $this->security->get_csrf_token_name();
-            $data['csrfHash'] = $this->security->get_csrf_hash();
-
-            echo $this->twig->render('backend/accounts/edit_form.twig',$data);
+            $this->outData['csrfName'] = $this->security->get_csrf_token_name();
+            $this->outData['csrfHash'] = $this->security->get_csrf_hash();
+            
+            echo $this->twig->render('backend/accounts/edit_form.twig',$this->outData);
 
         } else { //表單送出時
 

@@ -51,11 +51,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 
-$route['main/members/login'] = 'members/login';
-$route['main/members/logout'] = 'members/logout';
+$route['main/login'] = 'login/frontendLogin';
+$route['main/logout'] = 'login/frontendLogout';
 $route['main/members/edit'] = 'members/edit';
 $route['main/members/edit/(:any)'] = 'members/edit/$1';
 
+$route['admin/login'] = 'login/backendLogin';
+$route['admin/logout'] = 'login/backendLogout';
 $route['admin/accounts'] = 'accounts';
 $route['admin/accounts/edit'] = 'accounts/edit';
 $route['admin/accounts/edit/(:num)'] = 'accounts/edit/$1';

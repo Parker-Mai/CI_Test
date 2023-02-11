@@ -1,56 +1,19 @@
 <?php
 
-class Members_model extends CI_Model {
+class Members_model extends CI_Model
+{
+    //設public是因為要給auth用 (暫時先這樣 找到解法再說)
 
-    protected $table = "ci_members";
+    public $table = "ci_members";
 
-    protected $primaryKey = 'ID';
+    public $primaryKey = 'ID';
 
-    protected $passWordHash = 'member_pwd';
+    public $loginField = 'member_name';
 
-    public function login($inputData, $field)
-    {
-        
-        $query = $this->db->get_where($this->table, array($field => $inputData[$field]));
-        
-        if($query->num_rows() != 1){
+    public $passWordHash = 'member_pwd';
 
-			return FALSE;
-
-		} else {
-
-            $dbData = $query->row_array();
-
-            //密碼驗證
-            if (!password_verify($inputData['member_pwd'], $dbData['member_pwd'])) {
-                
-                die('<script>alert("帳號或密碼錯誤。");history.back();</script>');
-
-            }
-            
-            //資料放session
-            $this->load->library('session');
-
-            $this->session->set_userdata([
-                'userID'        => $dbData['ID'],
-                'userName'      => $dbData['member_name'],
-                'userRealName'  => $dbData['member_realname'],
-            ]);
-
-            //更新登入IP、登入時間
-            $datas['last_login_ip'] = $this->input->ip_address();
-            $datas['last_login_at'] = date('Y/m/d H:i:s');
-
-			$this->db->where($this->primaryKey, $dbData['ID']);
-			$this->db->update($this->table, $datas);
-
-            return TRUE;
-
-        }
-
-    }
+    public $hiddenField = ['member_pwd','last_login_ip','last_login_at','create_at','update_at'];
 
 }
-
 
 ?>
