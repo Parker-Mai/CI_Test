@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+
+  {% include 'frontend/layouts/header.twig' %}
+
+</head>
+
+<body>
+
+  <!-- 頁面讀取動畫 START -->
+  <div class="preloader">
+    <div class="loading-mask"></div>
+    <div class="loading-mask"></div>
+    <div class="loading-mask"></div>
+    <div class="loading-mask"></div>
+    <div class="loading-mask"></div>
+  </div>
+  <!-- 頁面讀取動畫 END -->
+
+  <section class="site-wrapper">
+    <div class="pt-table">
+      <div class="pt-tablecell page-services relative">
+
+        <!-- 中間核心 START -->
+        <div class="container">
+
+          <div class="row">
+            <div class="col-xs-12 col-lg-offset-1 col-lg-10">
+
+              <!-- 中心大標區塊 START -->
+              <div class="page-title text-center">
+                
+                <a href="/" title="Back To Index">
+                  <h2>CodeIgniter 3 <br><span class="primary">Demo Project</span> <span class="title-bg">SIDE PROJECT</span></h2>
+                  <p>Welcome！ {{ userRealName }}</p>
+                </a>
+
+              </div>
+              <!-- 中心大標區塊 END -->
+
+              
+              <!-- 中心內容替換區塊 START -->
+              {% block content %}{% endblock %}
+              <!-- 中心內容替換區塊 END -->
+
+            </div>
+
+          </div>
+
+        </div>
+         <!-- 中間核心 END -->
+
+        <!-- 下方Footer區塊 START -->
+        <nav class="page-nav clear">
+          <div class="container">
+            <div class="flex flex-middle space-between">
+              <span class="copyright">Copyright &copy; 2023</a>.</span>
+            </div>
+          </div>
+        </nav>
+        <!-- 下方Footer區塊 END -->
+
+      </div>
+    </div>
+  </section>
+
+  {% include 'frontend/layouts/script.twig' %}
+  
+</body>
+
+</html>

@@ -32,7 +32,7 @@
 
             
 
-            echo $this->twig->render('index.twig',$data);
+            echo $this->twig->render('frontend/index.twig',$data);
 
         }
 

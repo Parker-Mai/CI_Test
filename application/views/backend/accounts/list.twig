@@ -1,0 +1,56 @@
+{% extends 'backend/layouts/main.twig' %}
+
+{% block content %}
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body" style="padding: 50px">
+
+            <h4 class="card-title">系統帳號</h4>
+
+            <p class="card-description">
+                <a href="/admin/accounts/edit" class="btn btn-primary btn-icon-text">
+                    <i class="mdi mdi-plus btn-icon-prepend"></i> 新增
+                </a>
+            </p>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+
+                            <th> 帳號 </th>
+                            <th> 姓名 </th>
+                            <th> 手機 </th>
+                            <th> 信箱 </th>
+                            <th> 最後登入時間 </th>
+                            <th width="5%"> 狀態 </th>
+                            <th width="10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in dataList %}
+                        <tr>
+                            <td> {{ item.account_name }} </td>
+                            <td> {{ item.account_realname }} </td>
+                            <td> {{ item.account_phone }} </td>
+                            <td> {{ item.account_email }} </td>
+                            <td> {{ item.account_last_login_at }} </td>
+                            <td> {{ item.is_disabled }} </td>
+                            <td>
+                                <a href="/admin/accounts/edit/{{ item.ID }}" class="btn btn-warning btn-icon-text">
+                                    <i class="mdi mdi-file btn-icon-prepend"></i> 編輯
+                                </a>
+                                <a href="javascript:if(confirm('是否確定要刪除此項目?')) location.href='/admin/accounts/delete/{{ item.ID }}'" class="btn btn-danger btn-icon-text">
+                                    <i class="mdi mdi-delete btn-icon-prepend"></i> 刪除
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

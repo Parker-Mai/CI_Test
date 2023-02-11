@@ -1,0 +1,98 @@
+{% extends 'frontend/layouts/main.twig' %}
+
+{% block content %}
+
+<div class="col-xs-12 col-sm-7 col-md-7 col-md-offset-1 col-lg-offset-2">
+
+  <div class="section-title clear">
+    <h3>會員資料{{ methodTitle }}</h3>
+    <span class="bar-dark"></span>
+    <span class="bar-primary"></span>
+  </div>
+
+  <form id="dataForm" class="row contact-form no-gutter" action="{{ methodAction }}" method="post">
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field">
+        <span class="input-icon"><i class="tf-profile-male"></i></span>
+        <input type="text" class="form-control" name="member_name" id="member_name" value="{{ member_name }}"
+          placeholder="Enter your member" {{ methodReadonly }} required >
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field">
+        <span class="input-icon"><i class="tf-ion-android-person"></i></span>
+        <input type="text" class="form-control" name="member_realname" id="member_realname"
+          value="{{ member_realname }}" placeholder="Enter your name" required >
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field">
+        <span class="input-icon"><i class="tf-ion-ios-locked"></i></span>
+        <input type="password" class="form-control" name="member_pwd" id="member_pwd"
+          placeholder="Enter Your password" autocomplete="off" {{ pwdRequired }}>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field">
+        <span class="input-icon"><i class="tf-ion-ios-locked"></i></span>
+        <input type="password" class="form-control" id="member_pwd_check" placeholder="Check Your password"
+          autocomplete="off" {{ pwdRequired }}>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field email">
+        <span class="input-icon"><i class="tf-envelope2"></i></span>
+        <input type="email" class="form-control" name="member_email" id="member_email" value="{{ member_email }}"
+          placeholder="Your email address" required>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <div class="input-field message">
+        <span class="input-icon"><i class="tf-pencil2"></i></span>
+        <textarea name="member_message" id="member_message" class="form-control"
+          placeholder="Write your message">{{ member_message }}</textarea>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6">
+      <div class="input-field">
+        <span class="btn-border">
+          <input type="hidden" name="{{ csrfName }}" value="{{ csrfHash }}">
+          <button type="submit" class="btn btn-primary btn-custom-border text-uppercase submit">Submit Data</button>
+        </span>
+      </div>
+      <div class="msg-success">Your Message was sent successfully</div>
+      <div class="msg-failed">Something went wrong, please try again later</div>
+    </div>
+
+  </form>
+
+</div>
+
+<script>
+
+  $('#dataForm').submit(function(){
+    
+    if ($('#member_pwd').val() != '') {
+
+      if ($('#member_pwd').val() != $('#member_pwd_check').val()) {
+
+        alert('輸入密碼與確認密碼不符合。');
+        return false;
+      }
+
+    }
+
+    return true;
+
+  });
+
+</script>
+
+{% endblock %}
