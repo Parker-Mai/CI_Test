@@ -26,6 +26,7 @@ class Accounts_model extends CI_Model {
 
             }
             
+            //資料放session
             $this->load->library('session');
 
             $this->session->set_userdata([
@@ -34,11 +35,16 @@ class Accounts_model extends CI_Model {
                 'userRealName'  => $dbData['account_realname'],
             ]);
 
+            //更新登入IP、登入時間
+            $datas['last_login_ip'] = $this->input->ip_address();
+            $datas['last_login_at'] = date('Y/m/d H:i:s');
+
+			$this->db->where($this->primaryKey, $dbData['ID']);
+			$this->db->update($this->table, $datas);
+
             return TRUE;
 
         }
-
-        
 
     }
 

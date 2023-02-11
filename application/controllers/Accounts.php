@@ -66,7 +66,7 @@ class Accounts extends CI_Controller
 
         } else { //表單送出時
 
-            $inpuDatas = $this->input->post(); //抓post進來的資料
+            $inpuDatas = $this->input->post(NULL,TRUE); //抓post進來的資料, 第二參數xss過濾
 
             $inpuDatas['account_pwd'] = password_hash($inpuDatas['account_pwd'], PASSWORD_DEFAULT); //密碼編碼
            
@@ -110,7 +110,7 @@ class Accounts extends CI_Controller
 
         } else {
 
-            $inpuDatas = $this->input->post();
+            $inpuDatas = $this->input->post(NULL,TRUE); //抓post進來的資料, 第二參數xss過濾
 
             $chk = $this->accounts_model->login($inpuDatas,'account_name');
 
@@ -126,7 +126,6 @@ class Accounts extends CI_Controller
 
         }
         
-       
     }
     
     public function logout()

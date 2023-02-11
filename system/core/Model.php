@@ -53,6 +53,8 @@ class CI_Model {
 
 	protected $primaryKey = 'id';
 
+	protected $timeAutoUpdate = TRUE;
+
 	/**
 	 * Class constructor
 	 *
@@ -106,9 +108,22 @@ class CI_Model {
 		
 		if ($id === NULL) {
 			
+			if ($this->timeAutoUpdate) {
+
+				$datas['create_at'] = date('Y/m/d H:i:s');
+				$datas['update_at'] = date('Y/m/d H:i:s');
+
+			}
+
 			return $this->db->insert($this->table, $datas);
 
 		} else {
+
+			if ($this->timeAutoUpdate) {
+
+				$datas['update_at'] = date('Y/m/d H:i:s');
+
+			}
 
 			$this->db->where($this->primaryKey, $id);
 			return $this->db->update($this->table, $datas);
