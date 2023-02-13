@@ -134,7 +134,7 @@ class CI_Model {
 			$datas[$this->passWordHash] = password_hash($datas[$this->passWordHash], PASSWORD_DEFAULT);
 
 		}
-
+		
 		if ($id === NULL) {
 			
 			if ($this->timeAutoUpdate) {

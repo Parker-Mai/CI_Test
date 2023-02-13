@@ -83,6 +83,8 @@ class CI_Controller {
 	public function __construct()
 	{
 		self::$instance =& $this;
+		
+		
 
 		//twig 模板引擎宣告 START
 			$this->loader = new \Twig\Loader\FilesystemLoader(VIEWPATH);
@@ -98,7 +100,11 @@ class CI_Controller {
 		}
 
 		$this->load =& load_class('Loader', 'core');
+
+		$this->getSystemData();
+
 		$this->load->initialize();
+
 		log_message('info', 'Controller Class Initialized');
 	}
 
@@ -114,5 +120,29 @@ class CI_Controller {
 	{
 		return self::$instance;
 	}
+
+	/**
+	 * 抓system資料
+	 *
+	 * @static
+	 * @return	object
+	 */
+	private function getSystemData()
+	{
+		
+		$this->load->model('system_model'); //宣告model
+        $this->load->library('session');
+
+        $data = $this->system_model->getData(1);
+		
+        //放session
+        $this->session->set_userdata([
+            'system' => [
+				'webTitle' => $data['web_title'],
+                'templateType' => $data['frontend_template']
+            ]
+        ]);
+
+	} 
 
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="zxx">
+
+<head>
+  
+	{% include 'frontend_2/layouts/header.twig' %}
+
+</head>
+
+<body>
+
+	<section class="section banner">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10">
+					<a href="/">
+						<h2 class="cd-headline clip is-full-width mb-4 ">
+							Codeigniter 3 <br>
+							<span class="cd-words-wrapper text-color">
+								<b class="is-visible">前台版型2</b>
+								<b>Demo Project.</b>
+								<b>Side Project.</b>
+							</span>
+						</h2>
+					</a>
+					<p>Welcome！ {{ userRealName }}</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{% block content %}{% endblock %}  
+
+	{% include 'frontend_2/layouts/footer.twig' %}
+
+	{% include 'frontend_2/layouts/script.twig' %}
+
+</body>
+
+</html>

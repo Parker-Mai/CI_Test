@@ -11,6 +11,8 @@
             $this->load->library('session');
             $this->load->library('auth');
             
+            $system = $this->session->userdata('system');
+
             if ($this->auth->loginCheck('web')) { //已登入
                 
                 $data = [
@@ -26,10 +28,12 @@
                     'action' => 'login',
                     'actionName' => 'Login', 
                 ];
-
+ 
             }
 
-            echo $this->twig->render('frontend/index.twig',$data);
+            $data['webTitle'] = $system['webTitle'];
+
+            echo $this->twig->render('frontend_'.$system['templateType'].'/index.twig',$data);
 
         }
 

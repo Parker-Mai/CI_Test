@@ -2,10 +2,11 @@
 
 class Members extends CI_Controller
 {
+
     private $validationRules = [
         'member_name' => [
             'label' => '帳號',
-            'rules' => 'required',
+            'rules' => '',
             'errors' => [
                 'required' => '{field} 為必填',
                 'is_unique' => '{field}已存在，請使用其他帳號'
@@ -39,7 +40,9 @@ class Members extends CI_Controller
         $this->load->model('members_model'); //宣告model
         $this->load->library('session'); //宣告session library
         $this->load->library('auth');
-        
+
+        $system = $this->session->userdata('system');
+
         if (!empty($flag)) { //資料更新時
 
             if ($flag != 'set') { //限定進來的字段
@@ -89,10 +92,13 @@ class Members extends CI_Controller
             }
 
             $data['userRealName'] = isset($userData['frontendUser']['member_realname']) ? $userData['frontendUser']['member_realname'] : "";
+            $data['webTitle'] = $system['webTitle'];
             $data['csrfName'] = $this->security->get_csrf_token_name();
             $data['csrfHash'] = $this->security->get_csrf_hash();
 
-            echo $this->twig->render('frontend/members/edit_form.twig',$data);
+            
+
+            echo $this->twig->render('frontend_'.$system['templateType'].'/members/edit_form.twig',$data);
 
         } else { //表單送出時
 
@@ -108,10 +114,10 @@ class Members extends CI_Controller
 
             } else {
 
-                $this->validationRules['member_name']['rules'] .= "|is_unique[ci_members.member_name]"; //帳號欄位驗證加上存在判斷
+                $this->validationRules['member_name']['rules'] = "required|is_unique[ci_members.member_name]"; //帳號欄位驗證加上必填及存在判斷
 
             }
-
+            
             //驗證資料 START
                 
                 $this->load->library('form_validation');
@@ -133,8 +139,8 @@ class Members extends CI_Controller
                 }
                 
             //驗證資料 END
-           
-            $chk = $this->members_model->saveData($inputDatas, isset($userData['frontendUser']['ID']) ? $userData['frontendUser']['ID'] : ""); //model 儲存
+            
+            $chk = $this->members_model->saveData($inputDatas, isset($userData['frontendUser']['ID']) ? $userData['frontendUser']['ID'] : NULL); //model 儲存
 
             if ($chk) {
                 

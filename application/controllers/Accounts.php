@@ -66,6 +66,12 @@ class Accounts extends CI_Controller
 
         }
 
+        $this->load->model('system_model'); //宣告model
+
+        $data = $this->system_model->getData(1);
+
+        $this->outData['webTitle'] = $data['web_title'];
+
     }
 
     public function index()

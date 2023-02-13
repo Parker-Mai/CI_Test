@@ -9,6 +9,8 @@ class Login extends CI_Controller
         $this->load->model('members_model');
         $this->load->library('auth');
 
+        $system = $this->session->userdata('system');
+
         if ($this->auth->loginCheck('web')) {
             
             //導向
@@ -18,10 +20,11 @@ class Login extends CI_Controller
 
         if ($this->input->method() != 'post') {
 
+            $data['webTitle'] = $system['webTitle'];
             $data['csrfName'] = $this->security->get_csrf_token_name();
             $data['csrfHash'] = $this->security->get_csrf_hash();
-            
-            echo $this->twig->render('frontend/login/login_form.twig',$data);
+
+            echo $this->twig->render('frontend_'.$system['templateType'].'/login/login_form.twig',$data);
 
         } else {
 

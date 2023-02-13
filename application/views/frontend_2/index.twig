@@ -1,0 +1,72 @@
+{% extends 'frontend_2/layouts/main.twig' %}
+
+{% block content %}
+
+<section class="portfolio ">
+
+    <div class="container">
+
+        <div class="row shuffle-wrapper portfolio-gallery">
+
+            <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;design&quot;,&quot;illustration&quot;]">
+                <a href="/main/members/edit/set">
+                    <div class="position-relative inner-box">
+                        <div class="image position-relative ">
+                            <img src="/assets/frontend_2/images/a.jpg" alt="portfolio-image"
+                                class="img-fluid w-100 d-block">
+                            <div class="overlay-box">
+                                <div class="overlay-inner">
+                                    <div class="overlay-content">
+                                        <h5 class="mb-0">Member Center</h5>
+                                        <p>Handle things related to system members</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;branding&quot;]">
+                <a href="/main/{{ action }}">
+                    <div class="position-relative inner-box">
+                        <div class="image position-relative ">
+                            <img src="/assets/frontend_2/images/b.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
+                            <div class="overlay-box">
+                                <div class="overlay-inner">
+                                    <div class="overlay-content">
+                                        <h5 class="mb-0">Member {{ actionName }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;illustration&quot;]">
+                <a href="/admin" target="_blank" title="進入後台">
+                    <div class="position-relative inner-box">
+                        <div class="image position-relative ">
+                            <img src="/assets/frontend_2/images/c.jpg" alt="portfolio-image"
+                                class="img-fluid w-100 d-block">
+                            <div class="overlay-box">
+                                <div class="overlay-inner">
+                                    <div class="overlay-content">
+                                        <h5 class="mb-0">Admin System </h5>
+                                        <p>進入後台</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

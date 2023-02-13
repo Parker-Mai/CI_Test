@@ -58,10 +58,14 @@ $route['main/members/edit/(:any)'] = 'members/edit/$1';
 
 $route['admin/login'] = 'login/backendLogin';
 $route['admin/logout'] = 'login/backendLogout';
+$route['admin/templateChange'] = 'admin/templateChange'; //Ajax
+$route['admin/saveSetting'] = 'admin/saveSetting'; //Ajax
 $route['admin/accounts'] = 'accounts';
 $route['admin/accounts/edit'] = 'accounts/edit';
 $route['admin/accounts/edit/(:num)'] = 'accounts/edit/$1';
 $route['admin/accounts/delete/(:num)'] = 'accounts/delete/$1';
+
+
 
 $route['admin'] = 'admin';
 
