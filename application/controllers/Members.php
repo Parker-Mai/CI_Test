@@ -2,7 +2,38 @@
 
 class Members extends CI_Controller
 {
-    
+    private $validationRules = [
+        'member_name' => [
+            'label' => '帳號',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填',
+                'is_unique' => '{field}已存在，請使用其他帳號'
+            ]
+        ],
+        'member_pwd' => [
+            'label' => '密碼',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填'
+            ]
+        ],
+        'member_realname' => [
+            'label' => '姓名',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填'
+            ]
+        ],
+        'member_email' => [
+            'label' => '電子信箱',
+            'rules' => 'valid_emails',
+            'errors' => [
+                'valid_emails' => '請輸入正確的{field}格式'
+            ]
+        ],
+    ];
+
     public function edit($flag = NULL)
     {
         $this->load->model('members_model'); //宣告model
@@ -72,10 +103,36 @@ class Members extends CI_Controller
                 if (empty($inputDatas['member_pwd'])) {
 
                     unset($inputDatas['member_pwd']);
-
+                    unset($this->validationRules['member_pwd']);
                 }
 
+            } else {
+
+                $this->validationRules['member_name']['rules'] .= "|is_unique[ci_members.member_name]"; //帳號欄位驗證加上存在判斷
+
             }
+
+            //驗證資料 START
+                
+                $this->load->library('form_validation');
+                $this->form_validation->set_rules_v2($this->validationRules);
+                if ($this->form_validation->run() === FALSE) {
+
+                    if (count(validation_errors(TRUE)) > 0) {
+
+                        $error_msg = [];
+                        foreach (validation_errors(TRUE) as $field => $msg) {
+                            
+                            $error_msg[] = $msg."\\n";
+
+                        }
+                        
+                        die("<script>alert('".implode($error_msg)."');history.back();</script>");
+                    }
+
+                }
+                
+            //驗證資料 END
            
             $chk = $this->members_model->saveData($inputDatas, isset($userData['frontendUser']['ID']) ? $userData['frontendUser']['ID'] : ""); //model 儲存
 

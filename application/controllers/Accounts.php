@@ -7,6 +7,46 @@ class Accounts extends CI_Controller
 
     protected $outData;
 
+    private $validationRules = [
+        'account_name' => [
+            'label' => '系統帳號',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填',
+                'is_unique' => '{field}已存在，請使用其他系統帳號'
+            ]
+        ],
+        'account_pwd' => [
+            'label' => '系統密碼',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填'
+            ]
+        ],
+        'account_realname' => [
+            'label' => '系統姓名',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} 為必填'
+            ]
+        ],
+        'account_phone' => [
+            'label' => '手機',
+            'rules' => 'required|valid_phone_tw[3]',
+            'errors' => [
+                'required' => '{field} 為必填',
+                'valid_phone_tw' => '請輸入正確的{field}格式'
+            ]
+        ],
+        'account_email' => [
+            'label' => '電子信箱',
+            'rules' => 'valid_emails',
+            'errors' => [
+                'valid_emails' => '請輸入正確的{field}格式'
+            ]
+        ],
+    ];
+
     //重新宣告建構子 檢查是否登入
     public function __construct()
     {
@@ -75,10 +115,37 @@ class Accounts extends CI_Controller
                 if (empty($inputDatas['account_pwd'])) { //如果密碼沒填
 
                     unset($inputDatas['account_pwd']); //陣列把密碼欄位拿掉(不更新密碼)
+                    unset($this->validationRules['account_pwd']); //驗證陣列密碼拿掉(不檢查密碼)
 
                 }
 
+            } else { //資料新增時
+                
+                $this->validationRules['account_name']['rules'] .= "|is_unique[ci_accounts.account_name]"; //帳號欄位驗證加上存在判斷
+
             }
+
+            //驗證資料 START
+                
+                $this->load->library('form_validation');
+                $this->form_validation->set_rules_v2($this->validationRules);
+                if ($this->form_validation->run() === FALSE) {
+
+                    if (count(validation_errors(TRUE)) > 0) {
+
+                        $error_msg = [];
+                        foreach (validation_errors(TRUE) as $field => $msg) {
+                            
+                            $error_msg[] = $msg."\\n";
+    
+                        }
+                        
+                        die("<script>alert('".implode($error_msg)."');history.back();</script>");
+                    }
+
+                }
+                
+            //驗證資料 END
            
             $chk = $this->accounts_model->saveData($inputDatas, $id); //model 儲存
 

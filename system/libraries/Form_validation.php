@@ -250,6 +250,107 @@ class CI_Form_validation {
 		return $this;
 	}
 
+	public function set_rules_v2($field, $label = '', $rules = array(), $errors = array())
+	{
+		// No reason to set rules if we have no POST data
+		// or a validation array has not been specified
+		if ($this->CI->input->method() !== 'post' && empty($this->validation_data))
+		{
+			return $this;
+		}
+
+		// If an array was passed via the first parameter instead of individual string
+		// values we cycle through it and recursively call this function.
+		if (is_array($field))
+		{
+
+			//差別在於做資料處理而已
+			$afterData = [];
+			foreach ($field as $field => $detail) {
+				
+				$afterData[] = [
+					'field' => $field,
+					'label' => $detail['label'],
+					'rules' => $detail['rules'],
+					'errors' => $detail['errors'],
+				];
+
+			}
+
+			$field = $afterData;
+
+			foreach ($field as $row)
+			{
+				// Houston, we have a problem...
+				if ( ! isset($row['field'], $row['rules']))
+				{
+					continue;
+				}
+
+				// If the field label wasn't passed we use the field name
+				$label = isset($row['label']) ? $row['label'] : $row['field'];
+
+				// Add the custom error message array
+				$errors = (isset($row['errors']) && is_array($row['errors'])) ? $row['errors'] : array();
+
+				// Here we go!
+				$this->set_rules($row['field'], $label, $row['rules'], $errors);
+			}
+
+			return $this;
+		}
+
+		// No fields or no rules? Nothing to do...
+		if ( ! is_string($field) OR $field === '' OR empty($rules))
+		{
+			return $this;
+		}
+		elseif ( ! is_array($rules))
+		{
+			// BC: Convert pipe-separated rules string to an array
+			if ( ! is_string($rules))
+			{
+				return $this;
+			}
+
+			$rules = preg_split('/\|(?![^\[]*\])/', $rules);
+		}
+
+		// If the field label wasn't passed we use the field name
+		$label = ($label === '') ? $field : $label;
+
+		$indexes = array();
+
+		// Is the field name an array? If it is an array, we break it apart
+		// into its components so that we can fetch the corresponding POST data later
+		if (($is_array = (bool) preg_match_all('/\[(.*?)\]/', $field, $matches)) === TRUE)
+		{
+			sscanf($field, '%[^[][', $indexes[0]);
+
+			for ($i = 0, $c = count($matches[0]); $i < $c; $i++)
+			{
+				if ($matches[1][$i] !== '')
+				{
+					$indexes[] = $matches[1][$i];
+				}
+			}
+		}
+
+		// Build our master array
+		$this->_field_data[$field] = array(
+			'field'		=> $field,
+			'label'		=> $label,
+			'rules'		=> $rules,
+			'errors'	=> $errors,
+			'is_array'	=> $is_array,
+			'keys'		=> $indexes,
+			'postdata'	=> NULL,
+			'error'		=> ''
+		);
+
+		return $this;
+	}
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -373,7 +474,7 @@ class CI_Form_validation {
 	 * @param	string
 	 * @return	string
 	 */
-	public function error_string($prefix = '', $suffix = '')
+	public function error_string($prefix = '', $suffix = '', $toArray = FALSE)
 	{
 		// No errors, validation passes!
 		if (count($this->_error_array) === 0)
@@ -391,17 +492,31 @@ class CI_Form_validation {
 			$suffix = $this->_error_suffix;
 		}
 
-		// Generate the error string
-		$str = '';
-		foreach ($this->_error_array as $val)
-		{
-			if ($val !== '')
-			{
-				$str .= $prefix.$val.$suffix."\n";
-			}
-		}
+		//輸出型態控制
+		if (!$toArray) {
 
-		return $str;
+			//1. 框架原生的 -> 把所有驗證錯誤訊息組合成\n換行字串
+			// Generate the error string
+			$str = '';
+			foreach ($this->_error_array as $val)
+			{
+				if ($val !== '')
+				{
+					$str .= $prefix.$val.$suffix."\n";
+				}
+			}
+
+			return $str;
+
+		} else {
+
+			//2. 自行新增 -> 回傳陣列
+
+			return $this->_error_array;
+
+		}
+	
+		
 	}
 
 	// --------------------------------------------------------------------
@@ -1594,6 +1709,44 @@ class CI_Form_validation {
 		$this->_error_messages = array();
 		$this->error_string = '';
 		return $this;
+	}
+
+	/*
+	 * 台灣手機格式驗證
+	 * 三種格式
+	 * 1. 09xxxxxxxx (預設)
+	 * 2. 09xx-yyyyyy
+	 * 3. 09xx-yyy-zzz
+	 */
+	public function valid_phone_tw($str ,$val)
+	{
+		$chk_result = FALSE;
+        // 電話必須要有值
+        if (!empty(trim($str))) {//變數打錯
+            // 驗證val只能是 1 2 3
+            if (in_array($val, [1, 2, 3])) {
+
+                switch ($val) {
+                    case 1:
+                        $pattern = "/^09[0-9]{8,8}$/";
+                        break;
+                    case 2:
+                        $pattern = "/^09[0-9]{2,2}-[0-9]{6,6}$/";
+                        break;
+                    case 3:
+                        $pattern = "/^09[0-9]{2,2}-[0-9]{3,3}-[0-9]{3,3}$/";
+                        break;
+                }
+                if (preg_match($pattern, $str)) {
+                    $chk_result = TRUE;
+                }
+
+            }
+
+        }
+
+		return $chk_result;
+
 	}
 
 }
