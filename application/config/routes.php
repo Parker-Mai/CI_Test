@@ -64,6 +64,7 @@ $route['admin/accounts'] = 'accounts';
 $route['admin/accounts/edit'] = 'accounts/edit';
 $route['admin/accounts/edit/(:num)'] = 'accounts/edit/$1';
 $route['admin/accounts/delete/(:num)'] = 'accounts/delete/$1';
+$route['admin/accounts/disabled'] = 'accounts/disabled'; //Ajax
 
 
 

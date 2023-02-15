@@ -80,6 +80,9 @@ class Accounts extends EX_Controller
 
         $this->outData['dataList'] = $this->accounts_model->getDataList();
 
+        $this->outData['csrfName'] = $this->security->get_csrf_token_name();
+        $this->outData['csrfHash'] = $this->security->get_csrf_hash();
+
         echo $this->twig->render('backend/accounts/list.twig',$this->outData);
     }
 
@@ -183,6 +186,45 @@ class Accounts extends EX_Controller
 
             die('<script>alert("資料刪除失敗。");history.back();</script>');
             
+        }
+
+    }
+
+    public function disabled()
+    {
+
+        if (!$this->input->is_ajax_request()) {
+            
+            die(json_encode(['status' => 'NO', 'message' => '錯誤的導向，資料儲存失敗。'], JSON_UNESCAPED_UNICODE));
+
+        }
+
+        $this->load->model('accounts_model'); //宣告model
+
+        $inputDatas = $this->input->post(NULL,TRUE);
+
+        $data = $this->accounts_model->getDataById($inputDatas['id']);
+
+        if ($data['is_disabled'] == 1) {
+
+            $saveData['is_disabled'] = 0;
+
+        } else {
+
+            $saveData['is_disabled'] = 1;
+
+        }
+
+        $chk = $this->accounts_model->saveData($saveData,$inputDatas['id']); //model 儲存
+
+        if (!$chk) {
+            
+            die(json_encode(['status' => 'NO', 'message' => '資料儲存異常，狀態切換失敗。'], JSON_UNESCAPED_UNICODE));
+
+        } else {
+            
+            die(json_encode(['status' => 'YES', 'message' => '狀態切換成功。', 'data' => $saveData['is_disabled']], JSON_UNESCAPED_UNICODE));
+
         }
 
     }

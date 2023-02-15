@@ -34,7 +34,17 @@
                             <td> {{ item.account_phone }} </td>
                             <td> {{ item.account_email }} </td>
                             <td> {{ item.last_login_at }} </td>
-                            <td> {{ item.is_disabled }} </td>
+                            <td> 
+                                <label class="ios7-switch">
+                                    <input type="checkbox" class="is_disabled" data-id="{{ item.ID }}" 
+                                    
+                                    {% if item.is_disabled == 0 %}
+                                        checked
+                                    {% endif %}
+                                    >
+                                    <span></span>
+                                </label>
+                            </td>
                             <td>
                                 <a href="/admin/accounts/edit/{{ item.ID }}" class="btn btn-warning btn-icon-text">
                                     <i class="mdi mdi-file btn-icon-prepend"></i> 編輯
@@ -51,5 +61,55 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    $('.is_disabled').click(function(){
+
+        var dataid = $(this).data('id');
+
+        $.ajax({
+
+            url: "/admin/accounts/disabled",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id : dataid,
+                '{{ csrfName }}' : '{{ csrfHash }}'
+            },
+
+            success: function (data) {
+
+                if (data.status == 'YES') {
+                    
+                    if (data.data == 0) {
+
+                        $('.is_disabled[data-id="'+dataid+'"]').attr('checked',true);
+
+                    } else {
+                        
+                        $('.is_disabled[data-id="'+dataid+'"]').attr('checked',false);
+
+                    }
+                    
+
+                } 
+
+                alert(data.message);
+
+            },
+
+            error: function (a) {
+                // console.log(a);
+
+                alert('發生無預期的異常。');
+
+            }
+
+        });
+
+    })
+
+</script>
 
 {% endblock %}

@@ -17,7 +17,8 @@ class Accounts_model extends EX_Model
     protected $hiddenField = ['account_pwd','last_login_ip','last_login_at','create_at','update_at'];
 
     protected $getProcessRule = [
-        'is_disabled' => ['0' => '啟用', '1' => '停用'],
+        // 'is_disabled' => ['0' => '啟用', '1' => '停用'],
+        // 'is_disabled' => ['0' => 'checked', '1' => ''],
     ];
 
     public function pwdVerify($loginPwd, $dbData)
