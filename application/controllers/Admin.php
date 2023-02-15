@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller
+class Admin extends EX_Controller
 {
 
     protected $outData;
@@ -15,7 +15,7 @@ class Admin extends CI_Controller
         
         $this->load->library('auth');
 
-        if (!$this->auth->loginCheck('admin')) {
+        if (!$this->auth->loginCheck('admin', TRUE)) {
             
             //導向
             die('<script>location.href="/admin/login";</script>');
@@ -25,7 +25,7 @@ class Admin extends CI_Controller
             $this->outData = $this->auth->userData;
 
         }
-
+        
     }
 
     public function index()
@@ -33,7 +33,7 @@ class Admin extends CI_Controller
      
         $this->load->model('system_model'); //宣告model
 
-        $data = $this->system_model->getData(1);
+        $data = $this->system_model->getDataById(1);
         
         if ($data['frontend_template'] == 1) {
             
@@ -65,7 +65,7 @@ class Admin extends CI_Controller
 
         $this->load->model('system_model'); //宣告model
 
-        $data = $this->system_model->getData(1);
+        $data = $this->system_model->getDataById(1);
 
         if ($data['frontend_template'] == 1) {
 

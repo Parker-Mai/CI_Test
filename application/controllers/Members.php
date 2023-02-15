@@ -1,6 +1,8 @@
 <?php
 
-class Members extends CI_Controller
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Members extends EX_Controller
 {
 
     private $validationRules = [
@@ -63,7 +65,7 @@ class Members extends CI_Controller
             }
 
             //DB重新抓資料
-            $data = $this->members_model->getData($userData['frontendUser']['ID']);
+            $data = $this->members_model->getDataById($userData['frontendUser']['ID']);
 
             if (!$data) { //資料庫防呆
                 

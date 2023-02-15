@@ -1,18 +1,25 @@
 <?php
 
-class Members_model extends CI_Model
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Members_model extends EX_Model
 {
-    //設public是因為要給auth用 (暫時先這樣 找到解法再說)
+    protected $table = "ci_members";
 
-    public $table = "ci_members";
+    protected $primaryKey = 'ID';
 
-    public $primaryKey = 'ID';
+    protected $loginField = 'member_name';
 
-    public $loginField = 'member_name';
+    protected $passWordHash = 'member_pwd';
 
-    public $passWordHash = 'member_pwd';
+    protected $hiddenField = ['member_pwd','last_login_ip','last_login_at','create_at','update_at'];
 
-    public $hiddenField = ['member_pwd','last_login_ip','last_login_at','create_at','update_at'];
+    public function pwdVerify($loginPwd, $dbData)
+    {
+
+        return password_verify($loginPwd, $dbData[$this->passWordHash]);
+
+    }
 
 }
 

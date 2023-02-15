@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Accounts extends CI_Controller
+class Accounts extends EX_Controller
 {
 
     protected $outData;
@@ -10,7 +10,7 @@ class Accounts extends CI_Controller
     private $validationRules = [
         'account_name' => [
             'label' => '系統帳號',
-            'rules' => 'required',
+            'rules' => '',
             'errors' => [
                 'required' => '{field} 為必填',
                 'is_unique' => '{field}已存在，請使用其他系統帳號'
@@ -55,7 +55,7 @@ class Accounts extends CI_Controller
         
         $this->load->library('auth');
 
-        if (!$this->auth->loginCheck('admin')) {
+        if (!$this->auth->loginCheck('admin', TRUE)) {
             
             //導向
             die('<script>location.href="/admin";</script>');
@@ -68,7 +68,7 @@ class Accounts extends CI_Controller
 
         $this->load->model('system_model'); //宣告model
 
-        $data = $this->system_model->getData(1);
+        $data = $this->system_model->getDataById(1);
 
         $this->outData['webTitle'] = $data['web_title'];
 
@@ -78,7 +78,7 @@ class Accounts extends CI_Controller
     {
         $this->load->model('accounts_model'); //宣告model
 
-        $this->outData['dataList'] = $this->accounts_model->getData();
+        $this->outData['dataList'] = $this->accounts_model->getDataList();
 
         echo $this->twig->render('backend/accounts/list.twig',$this->outData);
     }
@@ -91,7 +91,7 @@ class Accounts extends CI_Controller
 
             if ($id !== NULL) { //資料更新時
 
-                $this->outData['dbData'] = $this->accounts_model->getData($id);
+                $this->outData['dbData'] = $this->accounts_model->getDataById($id);
     
                 $this->outData['pwdRequired'] = '';
                 $this->outData['methodAction'] = '/admin/accounts/edit/'.$id;
@@ -127,7 +127,7 @@ class Accounts extends CI_Controller
 
             } else { //資料新增時
                 
-                $this->validationRules['account_name']['rules'] .= "|is_unique[ci_accounts.account_name]"; //帳號欄位驗證加上存在判斷
+                $this->validationRules['account_name']['rules'] .= "required|is_unique[ci_members.member_name]"; //帳號欄位驗證加上必填及存在判斷
 
             }
 
@@ -145,7 +145,7 @@ class Accounts extends CI_Controller
                             $error_msg[] = $msg."\\n";
     
                         }
-                        
+
                         die("<script>alert('".implode($error_msg)."');history.back();</script>");
                     }
 

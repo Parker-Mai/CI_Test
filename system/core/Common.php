@@ -848,6 +848,8 @@ if ( ! function_exists('function_usable'))
 	}
 }
 
+// ------------------------------------------------------------------------
+//資料輸出 Debug用
 if( ! function_exists('print_a'))
 {
 
@@ -861,6 +863,8 @@ if( ! function_exists('print_a'))
 
 }
 
+// ------------------------------------------------------------------------
+//資料輸出 Debug用
 if( ! function_exists('dd'))
 {
 
@@ -871,4 +875,21 @@ if( ! function_exists('dd'))
 		die();
 	}
 
+}
+
+// ------------------------------------------------------------------------
+//字串處理: 用"_"區分字串單字，合併每一單字唯一字串，每一單字第一個字母大寫
+if( ! function_exists('studly') )
+{
+	function studly($string)
+	{
+		$stringArr = explode('_',$string);
+	
+		$stringArr = array_map(function($str){
+			return ucfirst($str);
+		},$stringArr);
+
+		return implode($stringArr);
+	}
+	
 }

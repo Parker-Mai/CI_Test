@@ -1,6 +1,8 @@
 <?php
 
-class System_model extends CI_Model
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class System_model extends EX_Model
 {
     protected $table = "ci_system";
 

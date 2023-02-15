@@ -1,6 +1,8 @@
 <?php
 
-class Login extends CI_Controller
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Login extends EX_Controller
 {
 
     //前台登入
@@ -60,7 +62,7 @@ class Login extends CI_Controller
 
         $this->load->library('auth');
 
-        if ($this->auth->loginCheck('admin')) {
+        if ($this->auth->loginCheck('admin', TRUE)) {
             
             //導向
             die('<script>location.href="/admin";</script>');
@@ -78,8 +80,8 @@ class Login extends CI_Controller
             
             $inputDatas = $this->input->post(NULL,TRUE); //抓post進來的資料, 第二參數xss過濾
 
-            $chk = $this->auth->attempt('admin',$inputDatas['login_name'],$inputDatas['login_pwd']);
-
+            $chk = $this->auth->attempt('admin', $inputDatas['login_name'], $inputDatas['login_pwd'], TRUE);
+            
             if ($chk) {
 
                 die('<script>alert("登入成功。");location.href="/admin"</script>');

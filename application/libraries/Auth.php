@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CI_Auth
+class Auth
 {
     
     protected $CI;
@@ -19,7 +19,7 @@ class CI_Auth
     }
 
     //登入驗證
-    public function attempt($gate='admin', $loginName='', $loginPwd='')
+    public function attempt($gate='admin', $loginName='', $loginPwd='', $isDisabled = FALSE)
     {
         
         if (empty($loginName) || empty($loginPwd)) {
@@ -37,32 +37,24 @@ class CI_Auth
         $model = $this->CI->$modelName;
 
         //開始驗證
-        $query = $this->CI->db->get_where($model->table, array($model->loginField => $loginName));
-
-        if($query->num_rows() != 1){
+        $dbData = $model->getDataByField($loginName, '', TRUE, $isDisabled);
+        
+        if(!$dbData){
 
 			return FALSE;
 
 		} else {
-
-            $dbData = $query->row_array();
-
+           
             //密碼驗證
-            if (!password_verify($loginPwd, $dbData[$model->passWordHash])) {
-                
+            if (!$model->pwdVerify($loginPwd, $dbData)) {
+        
                 return FALSE;
 
             }
 
-            //過濾隱藏欄位
-            foreach ($model->hiddenField as $field) {
-                
-                if (array_key_exists($field, $dbData)) {
-                    unset($dbData[$field]);
-                }
+            //欄位過濾
+            $dbData = $model->hiddenProcess($dbData,'single');
 
-            } 
-            
             if ($gate == 'admin') {
 
                 $saveField = 'backendUser';
@@ -88,11 +80,10 @@ class CI_Auth
             }
 
             //更新登入IP、登入時間
-            $datas['last_login_ip'] = $this->CI->input->ip_address();
-            $datas['last_login_at'] = date('Y/m/d H:i:s');
-
-			$this->CI->db->where($model->primaryKey, $dbData['ID']);
-			$this->CI->db->update($model->table, $datas);
+			$model->saveData([
+                'last_login_ip' => $this->CI->input->ip_address(),
+                'last_login_at' => date('Y/m/d H:i:s')
+            ], $dbData['ID']);
 
             $this->userData = $dbData;
 
@@ -103,7 +94,7 @@ class CI_Auth
     }
 
     //檢查登入
-    public function loginCheck($gate)
+    public function loginCheck($gate, $isDisabled = FALSE)
     {
 
         if ($gate == 'admin') {
@@ -134,15 +125,14 @@ class CI_Auth
 
         } else {
             
-            $this->reFreshData($gate, $userData);
+           return $this->reFreshData($gate, $userData, $isDisabled);
 
-            return TRUE;
         }
 
     }
 
     //刷新使用者資料
-    public function reFreshData($gate, $userData)
+    public function reFreshData($gate, $userData, $isDisabled = FALSE)
     {
 
         $authSetting = $this->authSetting[$gate]; //抓config 驗證設定
@@ -153,40 +143,34 @@ class CI_Auth
         
         $model = $this->CI->$modelName;
 
-        $query = $this->CI->db->get_where($model->table, array($model->loginField => $userData[$model->loginField]));
+        $dbData = $model->getDataByField($userData, '', TRUE, $isDisabled);
+        
+        if ($gate == 'admin') {
 
-        if($query->num_rows() != 1){
+            $saveField = 'backendUser';
 
+        } elseif ($gate == 'web') {
+        
+            $saveField = 'frontendUser';
+
+        } 
+
+        $this->CI->load->library('session');
+
+        if(!$dbData){
+
+            //找不到的話 清掉session
+            $this->CI->session->unset_userdata($saveField);
 			return FALSE;
 
 		} else {
             
-            $dbData = $query->row_array();
-
-            //過濾隱藏欄位
-            foreach ($model->hiddenField as $field) {
-                
-                if (array_key_exists($field, $dbData)) {
-                    unset($dbData[$field]);
-                }
-
-            } 
-            
-            if ($gate == 'admin') {
-
-                $saveField = 'backendUser';
-
-            } elseif ($gate == 'web') {
-            
-                $saveField = 'frontendUser';
-
-            } 
+            //欄位過濾
+            $dbData = $model->hiddenProcess($dbData,'single');
 
             switch ($authSetting['storage']) {
                 
                 case 'session': //資料放session
-
-                    $this->CI->load->library('session');
 
                     $this->CI->session->set_userdata([
                         $saveField => $dbData
